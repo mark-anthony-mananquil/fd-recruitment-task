@@ -17,6 +17,7 @@
 }
 
 #todo-items .list-group-item {
+
   padding-top: 8px;
   padding-bottom: 8px;
 }
@@ -26,6 +27,7 @@
 }
 
 #todo-items .todo-item-checkbox {
+  padding-left: 8px;
   padding-top: 8px;
 }
 
@@ -35,4 +37,8 @@
 
 .modal-footer {
   display: block;
+}
+
+.item-background {
+    background-color: var(--background)
 }

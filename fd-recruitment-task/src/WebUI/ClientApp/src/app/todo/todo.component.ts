@@ -1,5 +1,6 @@
-import { Component, TemplateRef, OnInit } from '@angular/core';
+import { Component, TemplateRef, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import {
   TodoListsClient, TodoItemsClient,
@@ -14,6 +15,16 @@ import {
   styleUrls: ['./todo.component.scss']
 })
 export class TodoComponent implements OnInit {
+
+  constructor(
+    private listsClient: TodoListsClient,
+    private itemsClient: TodoItemsClient,
+    private modalService: BsModalService,
+    private fb: FormBuilder,
+    private router: Router,
+    private _changeDetectorRef: ChangeDetectorRef,
+  ) { }
+
   debug = false;
   deleting = false;
   deleteCountDown = 0;
@@ -32,16 +43,11 @@ export class TodoComponent implements OnInit {
     id: [null],
     listId: [null],
     priority: [''],
-    note: ['']
+    note: [''],
+    backGroundColor:['']
   });
-
-
-  constructor(
-    private listsClient: TodoListsClient,
-    private itemsClient: TodoItemsClient,
-    private modalService: BsModalService,
-    private fb: FormBuilder
-  ) { }
+  color: string;
+  currentRouter = this.router.url;
 
   ngOnInit(): void {
     this.listsClient.get().subscribe(
@@ -54,6 +60,7 @@ export class TodoComponent implements OnInit {
       },
       error => console.error(error)
     );
+    this.color = '';
   }
 
   // Lists
@@ -137,6 +144,16 @@ export class TodoComponent implements OnInit {
 
   // Items
   showItemDetailsModal(template: TemplateRef<any>, item: TodoItemDto): void {
+
+    if (item.backGroundColor == null)
+    {
+      this.color = '';
+    }
+    else
+    {
+      this.color = item.backGroundColor;
+    }
+    
     this.selectedItem = item;
     this.itemDetailsFormGroup.patchValue(this.selectedItem);
 
@@ -147,6 +164,7 @@ export class TodoComponent implements OnInit {
   }
 
   updateItemDetails(): void {
+    this.itemDetailsFormGroup.controls['backGroundColor'].setValue(this.color);
     const item = new UpdateTodoItemDetailCommand(this.itemDetailsFormGroup.value);
     this.itemsClient.updateItemDetails(this.selectedItem.id, item).subscribe(
       () => {
@@ -159,15 +177,19 @@ export class TodoComponent implements OnInit {
           );
           this.selectedItem.listId = item.listId;
           this.lists[listIndex].items.push(this.selectedItem);
+          this.selectedList = this.lists[listIndex];
         }
-
         this.selectedItem.priority = item.priority;
+        console.log(item.note)
         this.selectedItem.note = item.note;
+        this.selectedItem.backGroundColor = item.backGroundColor;
         this.itemDetailsModalRef.hide();
         this.itemDetailsFormGroup.reset();
       },
       error => console.error(error)
     );
+    this.color = '';
+    this._changeDetectorRef.markForCheck();
   }
 
   addItem() {
