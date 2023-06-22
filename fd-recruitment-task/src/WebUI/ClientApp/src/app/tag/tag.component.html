@@ -1,0 +1,20 @@
+
+<div>
+  <div>
+    <label for="tags">Tags</label> <br />
+    <input class="tag-input" type="text" [(ngModel)]="newTag" (input)="tagTypeAhead()" />
+    <button class="add-button" (click)="addTag(newTag)" *ngIf="showAddButton">Add</button>
+  </div>
+  <div class="tag" *ngFor="let suggestion of suggestions">
+    <button class="suggestion-button" (click)="addTag(suggestion)">{{ suggestion }}</button>
+  </div>
+</div>
+<div class="tag-container">
+  <div class="tag" *ngFor="let tag of tags">
+    <span class="tag-text">{{ tag }}</span>
+    <button class="remove-button" (click)="removeTag(tag)">X</button>
+  </div>
+</div>
+
+
+

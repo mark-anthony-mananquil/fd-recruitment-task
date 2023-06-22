@@ -20,6 +20,10 @@ public class TodoItemDto : IMapFrom<TodoItem>
 
     public string? BackGroundColor { get; set; }
 
+    public string? Tag { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
     public void Mapping(Profile profile)
     {
         profile.CreateMap<TodoItem, TodoItemDto>()

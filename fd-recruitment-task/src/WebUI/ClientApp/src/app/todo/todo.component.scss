@@ -2,6 +2,10 @@
   margin-right: 8px;
 }
 
+#todo-items {
+  padding-top: 5px;
+}
+
 #todo-items .item-input-control {
   border: 0;
   box-shadow: none;
@@ -41,4 +45,20 @@
 
 .item-background {
     background-color: var(--background)
+}
+
+.modal-body {
+  z-index: 1000;
+}
+
+#tag-typeAhed {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  width: 300px;
+}
+
+#app-tag {
+padding-top: 5px;
 }

@@ -855,6 +855,8 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
     priority?: PriorityLevel;
     note?: string | undefined;
     backGroundColor?: string | undefined;
+    tag?: string | undefined;
+    isDeleted?: boolean | undefined;
 
     constructor(data?: IUpdateTodoItemDetailCommand) {
         if (data) {
@@ -872,6 +874,8 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
             this.priority = _data["priority"];
             this.note = _data["note"];
             this.backGroundColor = _data["backGroundColor"];
+            this.tag = _data["tag"];
+            this.isDeleted = _data["isDeleted"]
         }
     }
 
@@ -888,7 +892,9 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
         data["listId"] = this.listId;
         data["priority"] = this.priority;
         data["note"] = this.note;
-        data["backGroundColor"] = this.backGroundColor;
+        data["backGroundColor"] = this.backGroundColor;data["backGroundColor"] = this.backGroundColor;
+        data["tag"] = this.tag;
+        data["isDeleted"] = this.isDeleted;
         return data;
     }
 }
@@ -899,6 +905,8 @@ export interface IUpdateTodoItemDetailCommand {
     priority?: PriorityLevel;
     note?: string | undefined;
     backGroundColor?: string | undefined;
+    tag?: string | undefined;
+    isDeleted?: boolean | undefined;
 }
 
 export enum PriorityLevel {
@@ -1068,6 +1076,8 @@ export class TodoItemDto implements ITodoItemDto {
     priority?: number;
     note?: string | undefined;
     backGroundColor?: string | undefined;
+    tag?: string | undefined;
+    isDeleted?: boolean;
 
     constructor(data?: ITodoItemDto) {
         if (data) {
@@ -1087,6 +1097,8 @@ export class TodoItemDto implements ITodoItemDto {
             this.priority = _data["priority"];
             this.note = _data["note"];
             this.backGroundColor = _data["backGroundColor"];
+            this.tag = _data["tag"];
+            this.isDeleted =  _data["isDeleted"];
         }
     }
 
@@ -1106,6 +1118,8 @@ export class TodoItemDto implements ITodoItemDto {
         data["priority"] = this.priority;
         data["note"] = this.note;
         data["backGroundColor"] = this.backGroundColor;
+        data["tag"] = this.tag;
+        data["isDeleted"] = this.isDeleted;
         return data;
     }
 }
@@ -1118,6 +1132,8 @@ export interface ITodoItemDto {
     priority?: number;
     note?: string | undefined;
     backGroundColor?: string | undefined;
+    tag?: string | undefined;
+    isDeleted?: boolean;
 }
 
 export class CreateTodoListCommand implements ICreateTodoListCommand {

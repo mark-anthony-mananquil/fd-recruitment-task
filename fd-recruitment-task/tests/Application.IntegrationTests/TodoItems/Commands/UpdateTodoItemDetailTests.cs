@@ -43,7 +43,8 @@ public class UpdateTodoItemDetailTests : BaseTestFixture
             ListId = listId,
             Note = "A1",
             Priority = PriorityLevel.High,
-            BackGroundColor = "#e5ede3"
+            BackGroundColor = "#e5ede3",
+            Tag = "tag1,tag2"
         };
 
         await SendAsync(command);
@@ -55,6 +56,7 @@ public class UpdateTodoItemDetailTests : BaseTestFixture
         item.Note.Should().Be(command.Note);
         item.Priority.Should().Be(command.Priority);
         item.BackGroundColor.Should().Be(command.BackGroundColor);
+        item.Tag.Should().Be(command.Tag);
         item.LastModifiedBy.Should().NotBeNull();
         item.LastModifiedBy.Should().Be(userId);
         item.LastModified.Should().NotBeNull();
