@@ -39,6 +39,11 @@ public class DeleteTodoItemTests : BaseTestFixture
 
         var item = await FindAsync<TodoItem>(itemId);
 
-        item.Should().BeNull();
+        //item.Should().BeNull();
+        item.Should().NotBeNull();
+        if (item != null)
+        {
+            item.IsDeleted.Should().BeTrue();
+        }
     }
 }

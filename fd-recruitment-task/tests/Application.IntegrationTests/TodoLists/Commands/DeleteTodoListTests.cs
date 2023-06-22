@@ -30,6 +30,11 @@ public class DeleteTodoListTests : BaseTestFixture
 
         var list = await FindAsync<TodoList>(listId);
 
-        list.Should().BeNull();
+        //list.Should().BeNull();
+        list.Should().NotBeNull();
+        if (list != null)
+        {
+            list.IsDeleted.Should().BeTrue();
+        }
     }
 }

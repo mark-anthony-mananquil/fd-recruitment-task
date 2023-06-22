@@ -16,5 +16,13 @@ public class TodoListDto : IMapFrom<TodoList>
 
     public string? Colour { get; set; }
 
-    public IList<TodoItemDto> Items { get; set; }
+    public bool? IsDeleted { get; set; }
+
+    private IList<TodoItemDto> items;
+
+    public IList<TodoItemDto> Items
+    {
+        get => items.Where(item => item.IsDeleted == null).ToList();
+        set => items = value;
+    }
 }

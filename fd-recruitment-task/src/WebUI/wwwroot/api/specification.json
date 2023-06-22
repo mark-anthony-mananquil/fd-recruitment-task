@@ -490,6 +490,14 @@
           "note": {
             "type": "string",
             "nullable": true
+          },
+          "backGroundColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "tag": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -557,6 +565,10 @@
             "type": "string",
             "nullable": true
           },
+          "isDeleted": {
+            "type": "boolean",
+            "nullable": true
+          },
           "items": {
             "type": "array",
             "items": {
@@ -590,6 +602,18 @@
           },
           "note": {
             "type": "string",
+            "nullable": true
+          },
+          "backGroundColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "isDeleted": {
+            "type": "boolean",
             "nullable": true
           }
         }

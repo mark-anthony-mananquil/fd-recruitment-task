@@ -1,5 +1,6 @@
-import { Component, TemplateRef, OnInit } from '@angular/core';
+import { Component, TemplateRef, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import {
   TodoListsClient, TodoItemsClient,
@@ -7,6 +8,7 @@ import {
   CreateTodoListCommand, UpdateTodoListCommand,
   CreateTodoItemCommand, UpdateTodoItemDetailCommand
 } from '../web-api-client';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-todo-component',
@@ -14,6 +16,16 @@ import {
   styleUrls: ['./todo.component.scss']
 })
 export class TodoComponent implements OnInit {
+
+  constructor(
+    private listsClient: TodoListsClient,
+    private itemsClient: TodoItemsClient,
+    private modalService: BsModalService,
+    private fb: FormBuilder,
+    private router: Router,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) { }
+
   debug = false;
   deleting = false;
   deleteCountDown = 0;
@@ -22,6 +34,7 @@ export class TodoComponent implements OnInit {
   priorityLevels: PriorityLevelDto[];
   selectedList: TodoListDto;
   selectedItem: TodoItemDto;
+  filteredItems: TodoItemDto[] = [];
   newListEditor: any = {};
   listOptionsEditor: any = {};
   newListModalRef: BsModalRef;
@@ -32,16 +45,15 @@ export class TodoComponent implements OnInit {
     id: [null],
     listId: [null],
     priority: [''],
-    note: ['']
+    note: [''],
+    backGroundColor: [''],
+    tag:['']
   });
-
-
-  constructor(
-    private listsClient: TodoListsClient,
-    private itemsClient: TodoItemsClient,
-    private modalService: BsModalService,
-    private fb: FormBuilder
-  ) { }
+  color: string;
+  selectedTags: string[] = [];
+  allTags: string[] = [];
+  tagFilter: string = '';
+  currentRouter = this.router.url;
 
   ngOnInit(): void {
     this.listsClient.get().subscribe(
@@ -50,10 +62,29 @@ export class TodoComponent implements OnInit {
         this.priorityLevels = result.priorityLevels;
         if (this.lists.length) {
           this.selectedList = this.lists[0];
+          this.filteredItems = this.selectedList?.items;
         }
       },
       error => console.error(error)
     );
+    this.color = '';
+  }
+
+  updateTags(tags: string[]): void {
+    this.selectedTags = tags;
+  }
+
+  tagTypeAhead() {
+    let item = this.selectedList.items?.filter(item => item?.tag?.toLowerCase().includes(this.tagFilter.toLowerCase()));
+    this.filteredItems = item;
+    if (this.tagFilter == '') {
+      this.filteredItems = this.selectedList.items;
+    }
+  }
+
+  updateSelectedListToDoItem(selectedList: TodoListDto): void {
+    this.selectedList = selectedList;
+    this.filteredItems = selectedList.items;
   }
 
   // Lists
@@ -133,10 +164,46 @@ export class TodoComponent implements OnInit {
       },
       error => console.error(error)
     );
+    this.reloadPage();
+  }
+
+  reloadPage() {
+    window.location.reload();
   }
 
   // Items
   showItemDetailsModal(template: TemplateRef<any>, item: TodoItemDto): void {
+    this.selectedTags = [];
+    let tagList: string[] = [];
+    _.each(this.selectedList.items, (item) => {
+      tagList.push(item.tag);
+    });
+
+    _.each(tagList, (tag) => {
+      if (tag != null)
+      {
+        let splittedTags = tag.split(',')
+        _.each(splittedTags, (val) => {
+          if (val && !this.allTags.includes(val)) {
+          this.allTags.push(val);
+          }
+        });
+      }
+    });
+
+    if (item.backGroundColor == null)
+    {
+      this.color = '';
+    }
+    else
+    {
+      this.color = item.backGroundColor;
+    }
+
+    if (item.tag) {
+      this.selectedTags = item.tag.split(',');
+    }
+
     this.selectedItem = item;
     this.itemDetailsFormGroup.patchValue(this.selectedItem);
 
@@ -147,6 +214,8 @@ export class TodoComponent implements OnInit {
   }
 
   updateItemDetails(): void {
+    this.itemDetailsFormGroup.controls['backGroundColor'].setValue(this.color);
+    this.itemDetailsFormGroup.controls['tag'].setValue(this.selectedTags.join(','))
     const item = new UpdateTodoItemDetailCommand(this.itemDetailsFormGroup.value);
     this.itemsClient.updateItemDetails(this.selectedItem.id, item).subscribe(
       () => {
@@ -159,15 +228,20 @@ export class TodoComponent implements OnInit {
           );
           this.selectedItem.listId = item.listId;
           this.lists[listIndex].items.push(this.selectedItem);
+          this.selectedList = this.lists[listIndex];
         }
-
         this.selectedItem.priority = item.priority;
         this.selectedItem.note = item.note;
+        this.selectedItem.backGroundColor = item.backGroundColor;
+        this.selectedItem.tag = this.selectedTags.join(',');
+
         this.itemDetailsModalRef.hide();
         this.itemDetailsFormGroup.reset();
       },
       error => console.error(error)
     );
+    this.color = '';
+    this._changeDetectorRef.markForCheck();
   }
 
   addItem() {
@@ -223,6 +297,7 @@ export class TodoComponent implements OnInit {
   }
 
   deleteItem(item: TodoItemDto, countDown?: boolean) {
+    console.log(item);
     if (countDown) {
       if (this.deleting) {
         this.stopDeleteCountDown();
@@ -254,6 +329,7 @@ export class TodoComponent implements OnInit {
         error => console.error(error)
       );
     }
+    this.reloadPage();
   }
 
   stopDeleteCountDown() {
