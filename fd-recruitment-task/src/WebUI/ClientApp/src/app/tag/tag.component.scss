@@ -1,0 +1,88 @@
+.tag-container {
+  margin-top:5px;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+
+.tag {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.tag-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  height: 30px;
+  width: 200px;
+ }
+
+.tag-text {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.remove-button {
+  background-color: red;
+  border: none;
+  color: white;
+  font-size: 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition-duration: 0.3s;
+}
+
+.remove-button:hover {
+  background-color: #45a049;
+}
+
+.remove-button:active {
+  background-color: #3e8e41;
+}
+
+.suggestion-button {
+  background-color: lightgreen;
+  border: none;
+  color: white;
+  border-radius: 2px;
+  cursor: pointer;
+  height:30px;
+  width: 60px;
+  transition-duration: 0.3s;
+  color: black;
+  font-size: 14px;
+}
+
+.suggestion-button:hover {
+  background-color: lightcoral;
+}
+
+.suggestion-button:active {
+  background-color: lightcoral;
+}
+
+
+.add-button {
+  margin-left: 5px;
+  background-color: #45a049;
+  border: 1px solid #ccc;
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  width: 50px;
+  height: 30px;
+}
+
+.add-button:hover {
+  background-color: red;
+}
+
+.add-button:active {
+  background-color: #3e8e41;
+}
